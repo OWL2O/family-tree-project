@@ -14,7 +14,7 @@ body {
     padding:0; 
     background: #e9ecef; 
     overflow: hidden; 
-    /* IMPORTANT: Re-enabling touch-action 'manipulation' for native mobile pinch-zoom */
+    /* CRITICAL FIX: Allow browser to handle pan/zoom touch gestures natively */
     touch-action: manipulation; 
 }
 
@@ -30,7 +30,8 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    cursor: grab;
+    /* FIX: Use 'move' cursor for better native drag feel */
+    cursor: move; 
     transform-origin: 0 0; 
 }
 
@@ -99,32 +100,27 @@ svg {
     border: 1px solid #dee2e6;
 }
 
-/* New CSS for the collapsible analysis panel */
 #analysis-panel {
-    top: 65px; /* Positioned below the icon */
+    top: 65px; 
     left: 20px; 
     font-size: 15px;
     line-height: 1.4;
     color: #333;
     width: 250px;
-    /* Collapse styling */
     transform: translateX(-150%);
     transition: transform 0.3s ease-out;
 }
 #analysis-panel.open {
     transform: translateX(0);
 }
-#analysis-panel h4 { margin: 10px 0 5px 0; border-top: 1px solid #ccc; padding-top: 5px; font-size: 1em; }
 
-
-/* New CSS for the clickable icon */
 #stats-icon {
     top: 20px; 
     left: 20px; 
     padding: 10px 14px;
     font-size: 20px;
     cursor: pointer;
-    background: #007bff; /* Blue color for focus */
+    background: #007bff; 
     color: white;
     border-radius: 50%;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -163,6 +159,7 @@ svg {
 #deleteAllBtn:hover {
     background: #5a6268;
 }
+#analysis-panel h4 { margin: 10px 0 5px 0; border-top: 1px solid #ccc; padding-top: 5px; font-size: 1em; } 
 
 /* --- End Premium Design --- */
 </style>
@@ -177,11 +174,11 @@ svg {
 </div>
 
 <div id="stats-icon" class="fixed-ui" title="ანალიზი">📊</div> 
-
 <div id="analysis-panel" class="fixed-ui">
     <p>იტვირთება...</p>
 </div>
 
+<div id="addBtn" class="fixed-ui" title="მთავარი პირის დამატება">+</div>
 
 
 <script>
@@ -307,9 +304,8 @@ function setupPan() {
     });
     
     // MOUSE WHEEL (Allows browser zoom)
-    // CRITICAL: We rely on the browser's native zoom (Ctrl+Wheel, pinch-to-zoom)
     panZoomContainer.addEventListener('wheel', (e) => {
-        // No prevention here.
+        // Allows Ctrl + Wheel zoom.
     });
 
     // TOUCH EVENTS (PANNING ONLY)
@@ -376,7 +372,23 @@ function setupPan() {
 
 // --- Your Tree Functions (Modified to prompt for action) ---
 
+function handlePersonClick(index) {
+    const person = treeData.find(p => p.index === index);
+    if (!person) return;
 
+    // Translated Georgian prompts
+    const action = prompt(
+        `მოქმედებები ${person.name}-ისთვის:\n\n1: შვილის დამატება\n2: დეტალების რედაქტირება\n3: წაშლა (შთამომავლებთან ერთად)\n\nაირჩიეთ 1, 2, ან 3, ან დააჭირეთ გაუქმება.`
+    );
+
+    if (action === '1') {
+        addChild(index);
+    } else if (action === '2') {
+        editPerson(index);
+    } else if (action === '3') {
+        deletePerson(index);
+    }
+}
 
 function createPerson(person) {
     const wrapper = document.createElement('div');
@@ -500,7 +512,6 @@ function drawTree() {
 
 // Add, edit, delete persons (original logic remains)
 function addPerson(parentIndex = null){
-    // Translated Georgian prompts
     const name = prompt("შეიყვანეთ სახელი:");
     if(!name) return;
     const colorChoice = prompt("აირჩიეთ ფერი: 1=მამრობითი(ლურჯი), 2=მდედრობითი(ვარდისფერი), 3=გარდაცვლილი(ნაცრისფერი)");
@@ -531,7 +542,6 @@ function editPerson(index){
 }
 
 function deletePerson(index){
-    // Translated Georgian prompts
     if(!confirm("ნამდვილად გსურთ ამ პირის და ყველა შთამომავლის წაშლა?")) return;
     const removeRecursive = (idx) => {
         const children = treeData.filter(p => p.parent === idx);
@@ -545,11 +555,7 @@ function deletePerson(index){
 }
 
 
-// NEW: Toggle function for the analysis panel
-document.getElementById('stats-icon').onclick = () => {
-    document.getElementById('analysis-panel').classList.toggle('open');
-}
-
+document.getElementById('addBtn').onclick = () => addPerson();
 
 // Redraw lines and recenter on window resize
 window.addEventListener('resize', () => { drawTree(); centerTree(); });
