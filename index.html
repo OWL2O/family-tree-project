@@ -194,43 +194,8 @@ let isPanning = false;
 let startX, startY;
 let translateX = 0;
 let translateY = 0;
-/* --- ✅ PINCH-ZOOM (ADDED ONLY, NOTHING CHANGED) --- */
 let scale = 1;
-let lastDist = 0;
 
-function getDistance(touches) {
-    const [t1, t2] = touches;
-    const dx = t1.clientX - t2.clientX;
-    const dy = t1.clientY - t2.clientY;
-    return Math.sqrt(dx*dx + dy*dy);
-}
-
-const panZoomContainer = document.getElementById('pan-zoom-container');
-
-panZoomContainer.addEventListener('touchmove', (e) => {
-    if (e.touches.length === 2) {
-        e.preventDefault();
-        const dist = getDistance(e.touches);
-        
-        if (lastDist !== 0) {
-            const delta = dist - lastDist;
-            scale += delta * 0.003; // smooth zoom speed
-
-            if (scale < 0.3) scale = 0.3;
-            if (scale > 3.5) scale = 3.5;
-
-            canvasWrapper.style.transform = 
-                `translate(${translateX}px, ${translateY}px) scale(${scale})`;
-
-            drawLines();
-        }
-        lastDist = dist;
-    }
-}, { passive: false });
-
-panZoomContainer.addEventListener('touchend', () => {
-    lastDist = 0;
-});
 
 function saveTree() { localStorage.setItem('familyTree', JSON.stringify(treeData)); }
 
@@ -309,7 +274,9 @@ function centerTree() {
 // --- Panning Functions ---
 
 function applyTransform() {
-    canvasWrapper.style.transform = `translate(${translateX}px, ${translateY}px)`;
+canvasWrapper.style.transform =
+   `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+
 }
 
 function setupPan() {
