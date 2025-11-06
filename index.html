@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 <title>Family Tree</title>
 <style>
 /* --- 🎨 Premium Design & Layout --- */
@@ -30,8 +30,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    /* FIX: Use 'move' cursor for better native drag feel */
-    cursor: move; 
+    cursor: grab;
     transform-origin: 0 0; 
 }
 
@@ -100,20 +99,7 @@ svg {
     border: 1px solid #dee2e6;
 }
 
-#analysis-panel {
-    top: 65px; 
-    left: 20px; 
-    font-size: 15px;
-    line-height: 1.4;
-    color: #333;
-    width: 250px;
-    transform: translateX(-150%);
-    transition: transform 0.3s ease-out;
-}
-#analysis-panel.open {
-    transform: translateX(0);
-}
-
+/* Analysis Icon */
 #stats-icon {
     top: 20px; 
     left: 20px; 
@@ -128,6 +114,24 @@ svg {
     align-items: center;
     justify-content: center;
 }
+
+/* Collapsible Analysis Panel */
+#analysis-panel {
+    top: 65px; 
+    left: 20px; 
+    font-size: 15px;
+    line-height: 1.4;
+    color: #333;
+    width: 250px;
+    transform: translateX(-150%);
+    transition: transform 0.3s ease-out;
+}
+#analysis-panel.open {
+    transform: translateX(0);
+}
+
+#analysis-panel h4 { margin: 10px 0 5px 0; border-top: 1px solid #ccc; padding-top: 5px; font-size: 1em; } 
+
 
 #addBtn { 
     top: 20px; 
@@ -159,7 +163,6 @@ svg {
 #deleteAllBtn:hover {
     background: #5a6268;
 }
-#analysis-panel h4 { margin: 10px 0 5px 0; border-top: 1px solid #ccc; padding-top: 5px; font-size: 1em; } 
 
 /* --- End Premium Design --- */
 </style>
@@ -179,9 +182,11 @@ svg {
 </div>
 
 <div id="addBtn" class="fixed-ui" title="მთავარი პირის დამატება">+</div>
+<div id="deleteAllBtn" class="fixed-ui" title="მთელი ხის წაშლა">Delete All</div>
 
 
 <script>
+// NOTE: Using the embedded JSON data
 let treeData = JSON.parse('[{"name":"გუალი","colorClass":"male","parent":null,"index":0},{"name":"გეგაანი","colorClass":"male","parent":0,"index":1},{"name":"კაკუ","colorClass":"female","parent":0,"index":2},{"name":"გუალი","colorClass":"male","parent":1,"index":3},{"name":"გვეგნუ","colorClass":"male","parent":1,"index":4},{"name":"გუჩი","colorClass":"male","parent":3,"index":5},{"name":"გვეგიაი","colorClass":"male","parent":3,"index":6},{"name":"ქვერჯა","colorClass":"female","parent":3,"index":7},{"name":"დივო","colorClass":"female","parent":3,"index":8},{"name":"მოსე","colorClass":"male","parent":5,"index":9},{"name":"გეგანი","colorClass":"male","parent":5,"index":10},{"name":"გვედო","colorClass":"male","parent":5,"index":11},{"name":"დასი","colorClass":"female","parent":5,"index":12},{"name":"მამალა","colorClass":"female","parent":5,"index":13},{"name":"არჩილი","colorClass":"male","parent":9,"index":14},{"name":"კაკი","colorClass":"male","parent":9,"index":15},{"name":"რაფაელი","colorClass":"male","parent":9,"index":16},{"name":"ელენე","colorClass":"female","parent":9,"index":17},{"name":"ცარუ","colorClass":"female","parent":9,"index":18},{"name":"შალვა","colorClass":"male","parent":10,"index":19},{"name":"ზურაბი","colorClass":"male","parent":10,"index":20},{"name":"თინა","colorClass":"female","parent":10,"index":21},{"name":"დოდო","colorClass":"female","parent":10,"index":22},{"name":"აბესა","colorClass":"male","parent":6,"index":23},{"name":"კოსტა","colorClass":"male","parent":6,"index":24},{"name":"ადი","colorClass":"male","parent":6,"index":25},{"name":"სევერინი","colorClass":"male","parent":6,"index":26},{"name":"ბარბალაი","colorClass":"female","parent":6,"index":27},{"name":"დივო","colorClass":"female","parent":6,"index":28},{"name":"ალმაიზი","colorClass":"male","parent":4,"index":29},{"name":"დავით","colorClass":"male","parent":4,"index":30},{"name":"განგულ","colorClass":"female","parent":4,"index":31},{"name":"ალექსანდრე","colorClass":"male","parent":29,"index":32},{"name":"ოფროსინ","colorClass":"female","parent":29,"index":33},{"name":"ელისაბედი","colorClass":"female","parent":29,"index":34},{"name":"კატი","colorClass":"female","parent":29,"index":35},{"name":"დივოლ","colorClass":"female","parent":29,"index":36},{"name":"ნატა","colorClass":"female","parent":29,"index":37},{"name":"ოფროსინ","colorClass":"female","parent":29,"index":38},{"name":"ტერეზა","colorClass":"female","parent":29,"index":39},{"name":"მაქსიმე","colorClass":"male","parent":30,"index":40},{"name":"ნესტორი","colorClass":"male","parent":30,"index":41},{"name":"ოლისიმე","colorClass":"male","parent":30,"index":42},{"name":"კასარიაი","colorClass":"female","parent":30,"index":43},{"name":"ტებო","colorClass":"female","parent":30,"index":44},{"name":"მაგრაფინექ","colorClass":"female","parent":30,"index":45},{"name":"დადი","colorClass":"female","parent":30,"index":46},{"name":"პირიბე","colorClass":"male","parent":40,"index":47},{"name":"იბრაგიმი","colorClass":"male","parent":40,"index":48},{"name":"ჩერბიზი","colorClass":"male","parent":40,"index":49},{"name":"დავითი (დაუ)","colorClass":"male","parent":40,"index":50},{"name":"ვენერა","colorClass":"female","parent":40,"index":51},{"name":"რომანი","colorClass":"male","parent":47,"index":52},{"name":"რეზო","colorClass":"male","parent":47,"index":53},{"name":"რობერტი","colorClass":"male","parent":47,"index":54},{"name":"ლევანი","colorClass":"male","parent":48,"index":55},{"name":"ლელა","colorClass":"female","parent":48,"index":56},{"name":"სოფი","colorClass":"female","parent":48,"index":57},{"name":"ვიტალი","colorClass":"male","parent":49,"index":58},{"name":"ეკა","colorClass":"female","parent":49,"index":59},{"name":"ვახო","colorClass":"male","parent":50,"index":60},{"name":"ლანა","colorClass":"female","parent":50,"index":61},{"name":"ბეშქენი","colorClass":"male","parent":52,"index":62},{"name":"საბა","colorClass":"male","parent":52,"index":63},{"name":"თამთა","colorClass":"female","parent":52,"index":64},{"name":"ნინო","colorClass":"female","parent":52,"index":65},{"name":"ბექა","colorClass":"male","parent":53,"index":66},{"name":"ივანე","colorClass":"male","parent":53,"index":67},{"name":"მარი","colorClass":"female","parent":53,"index":68},{"name":"ლიზა","colorClass":"female","parent":53,"index":69},{"name":"კახაბერი","colorClass":"male","parent":54,"index":70},{"name":"ლუკა","colorClass":"male","parent":54,"index":71},{"name":"ილია","colorClass":"male","parent":55,"index":72},{"name":"მერიკო","colorClass":"female","parent":55,"index":73},{"name":"მაქსიმი","colorClass":"male","parent":58,"index":74},{"name":"ვიტო","colorClass":"male","parent":58,"index":75},{"name":"დათო","colorClass":"male","parent":60,"index":76},{"name":"ლუკა","colorClass":"male","parent":60,"index":77},{"name":"ანანო","colorClass":"female","parent":60,"index":78},{"name":"ქრისტინა","colorClass":"female","parent":60,"index":79},{"name":"იოანე","colorClass":"male","parent":63,"index":80},{"name":"ალექსანდრე","colorClass":"male","parent":63,"index":81},{"name":"იროდ","colorClass":"male","parent":32,"index":82},{"name":"გვეგნუ","colorClass":"male","parent":32,"index":83},{"name":"გვარმიან","colorClass":"male","parent":32,"index":84},{"name":"ჯოხან","colorClass":"male","parent":32,"index":85},{"name":"ჩარგოლ","colorClass":"male","parent":32,"index":86},{"name":"მამოლ","colorClass":"female","parent":32,"index":87},{"name":"სირი","colorClass":"female","parent":32,"index":88},{"name":"მაიოლ","colorClass":"female","parent":32,"index":89},{"name":"მარო","colorClass":"female","parent":32,"index":90},{"name":"მირიანი","colorClass":"male","parent":82,"index":91},{"name":"ზური","colorClass":"male","parent":82,"index":92},{"name":"ნორა","colorClass":"female","parent":82,"index":93},{"name":"იზო","colorClass":"female","parent":82,"index":94},{"name":"ირმა","colorClass":"female","parent":82,"index":95},{"name":"შალვა","colorClass":"male","parent":92,"index":96},{"name":"ნორა","colorClass":"female","parent":92,"index":97},{"name":"ლერი","colorClass":"male","parent":91,"index":98},{"name":"ლაშა","colorClass":"male","parent":91,"index":99},{"name":"ლევანი","colorClass":"male","parent":91,"index":100},{"name":"ბექა","colorClass":"male","parent":91,"index":101},{"name":"ნუნუკა","colorClass":"female","parent":91,"index":102},{"name":"ირაკლი","colorClass":"male","parent":98,"index":103},{"name":"დათო","colorClass":"male","parent":98,"index":104},{"name":"ლაშა-გიორგი","colorClass":"male","parent":99,"index":105},{"name":"თინათინი","colorClass":"female","parent":99,"index":106},{"name":"ლევანი","colorClass":"male","parent":100,"index":107},{"name":"მირიანი","colorClass":"male","parent":100,"index":108},{"name":"ერონი","colorClass":"male","parent":83,"index":109},{"name":"გელა","colorClass":"male","parent":83,"index":110},{"name":"ოთარი","colorClass":"male","parent":83,"index":111},{"name":"ვალერი","colorClass":"male","parent":83,"index":112},{"name":"ანზორი","colorClass":"male","parent":83,"index":113},{"name":"გოჩა","colorClass":"male","parent":109,"index":114},{"name":"ელმირა","colorClass":"female","parent":109,"index":115},{"name":"ერონი","colorClass":"male","parent":114,"index":116},{"name":"გვეგნუ","colorClass":"male","parent":111,"index":117},{"name":"მეგი","colorClass":"female","parent":111,"index":118},{"name":"მარიამი","colorClass":"female","parent":111,"index":119},{"name":"ნათია","colorClass":"female","parent":111,"index":120},{"name":"არტიომი","colorClass":"male","parent":112,"index":121},{"name":"ლანა","colorClass":"female","parent":112,"index":122},{"name":"ნანი","colorClass":"female","parent":113,"index":123},{"name":"დავითი","colorClass":"male","parent":113,"index":124},{"name":"საშკა","colorClass":"male","parent":85,"index":125},{"name":"გურამი","colorClass":"male","parent":85,"index":126},{"name":"ეკა","colorClass":"female","parent":85,"index":127},{"name":"მადონა","colorClass":"female","parent":85,"index":128},{"name":"მაიკო","colorClass":"female","parent":85,"index":129},{"name":"შოთა","colorClass":"male","parent":86,"index":130},{"name":"ტოლია","colorClass":"male","parent":86,"index":131},{"name":"ვოვა","colorClass":"male","parent":86,"index":132},{"name":"სვეტა","colorClass":"female","parent":86,"index":133},{"name":"ნიკოლოზი","colorClass":"male","parent":125,"index":134},{"name":"ელენე","colorClass":"female","parent":125,"index":135},{"name":"რომა","colorClass":"male","parent":130,"index":136},{"name":"მაქსიმი","colorClass":"male","parent":130,"index":137},{"name":"_","colorClass":"male","parent":130,"index":138},{"name":"არტიომი","colorClass":"male","parent":131,"index":139},{"name":"ალიონა","colorClass":"female","parent":131,"index":140},{"name":"ანგელინა","colorClass":"female","parent":132,"index":141},{"name":"კატია","colorClass":"female","parent":132,"index":142},{"name":"ბიძინა","colorClass":"male","parent":23,"index":143},{"name":"გოჯი","colorClass":"male","parent":23,"index":144},{"name":"გუალი","colorClass":"male","parent":23,"index":145},{"name":"ლუბა","colorClass":"female","parent":23,"index":146},{"name":"ნინო","colorClass":"female","parent":23,"index":147},{"name":"ჯენერი","colorClass":"male","parent":143,"index":148},{"name":"ჯემალი","colorClass":"male","parent":143,"index":149},{"name":"ნაირა","colorClass":"female","parent":143,"index":150},{"name":"ანიკო","colorClass":"female","parent":143,"index":151},{"name":"მუხრანი","colorClass":"male","parent":148,"index":152},{"name":"ბესიკი ბეი","colorClass":"male","parent":148,"index":153},{"name":"ნატო","colorClass":"female","parent":148,"index":154},{"name":"ნანა","colorClass":"female","parent":148,"index":155},{"name":"ნინო","colorClass":"female","parent":148,"index":156},{"name":"ლუკა","colorClass":"male","parent":152,"index":157},{"name":"მარიამი","colorClass":"female","parent":152,"index":158},{"name":"დავითი","colorClass":"male","parent":153,"index":159},{"name":"ანასტასია","colorClass":"female","parent":153,"index":160},{"name":"დიანა","colorClass":"female","parent":153,"index":161},{"name":"კარლო","colorClass":"male","parent":14,"index":162},{"name":"ნოდარი","colorClass":"male","parent":14,"index":163},{"name":"ჯოყოლა","colorClass":"male","parent":14,"index":164},{"name":"ბორისი","colorClass":"male","parent":14,"index":165},{"name":"გიორგი","colorClass":"male","parent":162,"index":166},{"name":"გვანცა","colorClass":"female","parent":162,"index":167},{"name":"ნიკოლოზი","colorClass":"male","parent":166,"index":168},{"name":"დათუნა","colorClass":"male","parent":166,"index":169},{"name":"ბუბა","colorClass":"male","parent":166,"index":170},{"name":"მოსე","colorClass":"male","parent":163,"index":171},{"name":"ლერი","colorClass":"male","parent":171,"index":172},{"name":"მარეხი","colorClass":"female","parent":163,"index":173},{"name":"მირანდა","colorClass":"female","parent":163,"index":174},{"name":"შორენა","colorClass":"female","parent":163,"index":175},{"name":"თინა","colorClass":"female","parent":163,"index":176},{"name":"თემო","colorClass":"male","parent":164,"index":177},{"name":"არჩილი","colorClass":"male","parent":164,"index":178},{"name":"გოდე","colorClass":"male","parent":164,"index":179},{"name":"ეთერი","colorClass":"female","parent":164,"index":180},{"name":"ზურაბი","colorClass":"male","parent":165,"index":181},{"name":"ხათუნა","colorClass":"female","parent":165,"index":182},{"name":"ნუგზარი","colorClass":"male","parent":15,"index":183},{"name":"კაპიტონი","colorClass":"male","parent":15,"index":184},{"name":"თენგიზი","colorClass":"male","parent":15,"index":185},{"name":"ვაჟა","colorClass":"male","parent":15,"index":186},{"name":"მაყვალა","colorClass":"female","parent":15,"index":187},{"name":"მანანა","colorClass":"female","parent":15,"index":188},{"name":"მარინა","colorClass":"female","parent":15,"index":189},{"name":"კახა","colorClass":"male","parent":183,"index":190},{"name":"ელენე","colorClass":"male","parent":190,"index":191},{"name":"ლევანი","colorClass":"male","parent":184,"index":192},{"name":"ომარი","colorClass":"male","parent":184,"index":193},{"name":"ნიკოლოზი","colorClass":"male","parent":184,"index":194},{"name":"ქეთი","colorClass":"female","parent":184,"index":195},{"name":"ანა","colorClass":"female","parent":192,"index":196},{"name":"ნიკოლოზი","colorClass":"male","parent":193,"index":197},{"name":"ლევანი","colorClass":"male","parent":193,"index":198},{"name":"გეგი","colorClass":"male","parent":193,"index":199},{"name":"სოსო","colorClass":"male","parent":185,"index":200},{"name":"ვასო","colorClass":"male","parent":185,"index":201},{"name":"დათო","colorClass":"male","parent":185,"index":202},{"name":"ლაზარე","colorClass":"male","parent":202,"index":203},{"name":"ლიზი","colorClass":"female","parent":202,"index":204},{"name":"სალომე","colorClass":"female","parent":202,"index":205},{"name":"გოგი","colorClass":"male","parent":19,"index":206},{"name":"ნათელა","colorClass":"female","parent":19,"index":207},{"name":"დათო","colorClass":"male","parent":20,"index":208},{"name":"ნიაკო","colorClass":"female","parent":20,"index":209},{"name":"ნინო","colorClass":"female","parent":206,"index":210},{"name":"ნინო","colorClass":"female","parent":24,"index":211},{"name":"ცოცა","colorClass":"female","parent":24,"index":212},{"name":"ნოფე","colorClass":"male","parent":25,"index":213},{"name":"ვალადი","colorClass":"male","parent":25,"index":214},{"name":"რიდ","colorClass":"female","parent":25,"index":215},{"name":"რაისა","colorClass":"female","parent":25,"index":216},{"name":"დავითი","colorClass":"male","parent":213,"index":217},{"name":"ჯემალი","colorClass":"male","parent":213,"index":218},{"name":"გია","colorClass":"male","parent":214,"index":219},{"name":"მამუკა","colorClass":"male","parent":214,"index":220},{"name":"ზურაბი","colorClass":"male","parent":214,"index":221},{"name":"ლია","colorClass":"female","parent":214,"index":222},{"name":"მაკო","colorClass":"female","parent":217,"index":223},{"name":"ბექა","colorClass":"male","parent":218,"index":224},{"name":"დავითი","colorClass":"male","parent":224,"index":225},{"name":"მარი","colorClass":"female","parent":218,"index":226},{"name":"ქეთი","colorClass":"female","parent":220,"index":227},{"name":"ანა","colorClass":"female","parent":220,"index":228},{"name":"ნინო","colorClass":"female","parent":220,"index":229},{"name":"ბარბარე","colorClass":"female","parent":221,"index":230},{"name":"სილო","colorClass":"male","parent":26,"index":231},{"name":"დათიკო","colorClass":"male","parent":26,"index":232},{"name":"ფრიდონი","colorClass":"male","parent":26,"index":233},{"name":"ბარბალაი","colorClass":"female","parent":26,"index":234},{"name":"სიდონია","colorClass":"female","parent":26,"index":235},{"name":"გოგა","colorClass":"male","parent":231,"index":236},{"name":"გოჩი","colorClass":"male","parent":231,"index":237},{"name":"ნინო","colorClass":"female","parent":231,"index":238},{"name":"დათო","colorClass":"male","parent":236,"index":239},{"name":"მატილდა","colorClass":"female","parent":236,"index":240},{"name":"სესილი","colorClass":"female","parent":236,"index":241},{"name":"ნიკოლოზი","colorClass":"male","parent":237,"index":242},{"name":"ანდრია","colorClass":"male","parent":237,"index":243},{"name":"ნინო","colorClass":"female","parent":237,"index":244},{"name":"გიო","colorClass":"male","parent":237,"index":245},{"name":"რეზი","colorClass":"male","parent":237,"index":246},{"name":"ბექა","colorClass":"male","parent":232,"index":247},{"name":"ქეთი","colorClass":"female","parent":232,"index":248},{"name":"ხათო","colorClass":"female","parent":232,"index":249},{"name":"ეკა","colorClass":"female","parent":232,"index":250},{"name":"დემეტრე","colorClass":"male","parent":247,"index":251},{"name":"დავითი","colorClass":"male","parent":247,"index":252},{"name":"სლავა","colorClass":"male","parent":233,"index":253},{"name":"ბაკური","colorClass":"male","parent":233,"index":254},{"name":"ზვიადი","colorClass":"male","parent":233,"index":255},{"name":"ბერდი","colorClass":"male","parent":233,"index":256},{"name":"მეგი","colorClass":"female","parent":233,"index":257},{"name":"კვირიკე","colorClass":"male","parent":253,"index":258},{"name":"ელენე","colorClass":"female","parent":253,"index":259},{"name":"ლილუ","colorClass":"female","parent":253,"index":260},{"name":"დაჩი","colorClass":"male","parent":255,"index":261},{"name":"_","colorClass":"female","parent":255,"index":262}]');
 
 // --- Panning Variables ---
@@ -233,7 +238,7 @@ function updateStats() {
         .join(', ');
 
     
-    const statsDiv = document.getElementById('analysis-panel'); // Target the new analysis panel
+    const statsDiv = document.getElementById('analysis-panel'); 
     statsDiv.innerHTML = `
         <p><strong>ოჯახის ხის ანალიზი:</strong></p>
         <p>ჯამური რაოდენობა: <strong>${totalPeople}</strong></p>
@@ -275,7 +280,7 @@ function applyTransform() {
 function setupPan() {
     const panZoomContainer = document.getElementById('pan-zoom-container');
 
-    // MOUSE EVENTS (PANNING)
+    // MOUSE EVENTS (PANNING) - Custom logic for desktop drag
     panZoomContainer.addEventListener('mousedown', (e) => {
         if (e.target.closest('.person') || e.target.closest('.fixed-ui')) {
             return; 
@@ -308,7 +313,7 @@ function setupPan() {
         // Allows Ctrl + Wheel zoom.
     });
 
-    // TOUCH EVENTS (PANNING ONLY)
+    // TOUCH EVENTS (RELYING ON NATIVE BROWSER GESTURES)
     let ongoingTouches = [];
     
     function copyTouch({ identifier, clientX, clientY }) {
@@ -316,7 +321,7 @@ function setupPan() {
     }
 
     panZoomContainer.addEventListener('touchstart', (e) => {
-        // Allow mobile browser's default behavior for zoom (pinch) and scroll
+        // CRITICAL FIX: DO NOT prevent default if more than one finger is down.
         if (e.touches.length > 1) return; 
 
         e.preventDefault(); 
@@ -329,7 +334,7 @@ function setupPan() {
     });
     
     panZoomContainer.addEventListener('touchmove', (e) => {
-        // Allow multi-touch for pinch-zoom, only handle single touch for custom pan
+        // CRITICAL FIX: Stop custom pan logic if two fingers are detected (allowing pinch-zoom to work)
         if (e.touches.length > 1) return;
 
         e.preventDefault();
@@ -352,7 +357,6 @@ function setupPan() {
     });
 
     panZoomContainer.addEventListener('touchend', (e) => {
-        // e.preventDefault() only if panning was active, but letting go is safe.
         [...e.changedTouches].forEach(touch => {
             const idx = ongoingTouches.findIndex(t => t.identifier === touch.identifier);
             if (idx >= 0) {
@@ -376,7 +380,6 @@ function handlePersonClick(index) {
     const person = treeData.find(p => p.index === index);
     if (!person) return;
 
-    // Translated Georgian prompts
     const action = prompt(
         `მოქმედებები ${person.name}-ისთვის:\n\n1: შვილის დამატება\n2: დეტალების რედაქტირება\n3: წაშლა (შთამომავლებთან ერთად)\n\nაირჩიეთ 1, 2, ან 3, ან დააჭირეთ გაუქმება.`
     );
@@ -556,6 +559,17 @@ function deletePerson(index){
 
 
 document.getElementById('addBtn').onclick = () => addPerson();
+document.getElementById('deleteAllBtn').onclick = () => {
+    if(confirm("ნამდვილად გსურთ მთლიანი ხის წაშლა?")) {
+        treeData = [];
+        localStorage.removeItem('familyTree');
+        drawTree();
+    }
+}
+document.getElementById('stats-icon').onclick = () => {
+    document.getElementById('analysis-panel').classList.toggle('open');
+}
+
 
 // Redraw lines and recenter on window resize
 window.addEventListener('resize', () => { drawTree(); centerTree(); });
